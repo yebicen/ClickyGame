@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import FriendCard from "./components/FriendCard";
 import Wrapper from "./components/Wrapper";
 import Title from "./components/Title";
+import SubTitle from "./components/SubTitle";
 import friends from "./friends.json";
 import "./App.css";
 
@@ -9,7 +10,10 @@ import "./App.css";
   class App extends Component {
   // Setting this.state.friends to the friends json array
   state = {
-    friends
+    friends,
+    clicked: [], 
+    score: 0,
+    slogan:""
   };
 
  
@@ -24,18 +28,31 @@ import "./App.css";
     return arr;
 }
 
-handleShuffle = event => {
-  event.preventDefault();
+handleShuffle = id => {
   this.ShuffleFriend(this.state.friends);
-  this.setState({ friends: this.state.friends});
+  if(this.state.clicked.indexOf(id) === -1) {
+    this.setState({score: this.state.score + 1});
+    this.setState({slogan: "You guessed correctly!"});
+    this.setState({ clicked: [...this.state.clicked, id]});
+  } else {
+    this.setState({
+      friends,
+      clicked: [], 
+      score: 0,
+      slogan:"You guessed incorrectly!"
+    });
+  }
 };
 
-//Then how to write the new array back to the state?????
 
   render() {
     return (
       <Wrapper>
         <Title>Clicky Game</Title>
+        <SubTitle>
+        <p>Score: {this.state.score}</p>
+        <p>{this.state.slogan}</p>
+        </SubTitle>
         {this.state.friends.map(friend => (
           <FriendCard
             id={friend.id}
